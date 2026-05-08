@@ -4,8 +4,8 @@ import Users from "../models/UsersSchema.js";
 const registerUser = async (req,res) => {
     console.log("req.body --- >",req.body);
     try {
-        const user = new Users(req.body)
-        const data = await user.save()
+        const user = new Users(req.body) // new hum constructor bnany k lye lagaty hyn
+        const data = await user.save() // save function database ma data save kry ga
         console.log(data);
 
         res.json ({
@@ -29,7 +29,8 @@ const registerUser = async (req,res) => {
 const fetchData = async (req,res) => {
     console.log("req.body --- >",req.body);
     try {
-        const user = await Users.find() // find({name:"sana"}) >>-- find secific data
+        const user = await Users.find() // find all data
+        // find({name:"sana"}) >>-- for specific data
 
         res.json ({
             status : true,
@@ -92,6 +93,12 @@ const updateUser = async (req,res) => {
         console.log("req.body >>-- ",req.body); // jo hum ne updation k lye request kya hy, jo hum postman ki body ma data send krty hyn update k lye
         const user = await Users.findByIdAndUpdate(id, req.body, {new:true}) 
 
+        if (user == null) {
+      return res.json({
+        status: false,
+        message: "Cannot find user",
+      });
+    }
         res.json ({
             status : true,
             message : "User updated successfully",
@@ -122,7 +129,7 @@ const deleteUser = async (req,res) => {
             status : true,
             message : "user deleted successfully",
         })
-        console.log("data after delete >>-- ",user); // show data o deleted user
+        console.log("data after delete >>-- ",user); // show data of deleted user
 
         
     } catch (error) {
@@ -150,7 +157,7 @@ const loginUser = async (req,res) => {
         })
         }
 
-        const user = await Users.findOne({email:email}) // find({name:"sana"}) >>-- find secific data
+        const user = await Users.findOne({email:email}) // first email db ma property name , or second email wo email hy jo user ne di hy,is email ko db ma jo email ma us se match kro
         console.log("Data of login user",user);
 
         // agr email galat dali/ ya jo email di h wo db ma nhi hy to ye response ayega 
